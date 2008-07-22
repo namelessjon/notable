@@ -1,0 +1,4 @@
+h1. Notable
+
+A very simple sinatra application which also listens to a jabber account, and
+records the messages sent there, serving up a simple list on the root url.
