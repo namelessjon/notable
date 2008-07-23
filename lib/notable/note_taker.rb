@@ -1,13 +1,14 @@
-require 'yaml'
 
 module Notable
   class NoteTaker
-    def initialize(config_file, echo = true)
-      username, password = parse_config(config_file)
-      @jid = Jabber::JID::new("#{username}/notetaker")
-      @pass = password
-      @client = Jabber::Client.new(@jid)
-      @echo = echo
+    attr_reader :client
+    attr_accessor :echo
+
+    def initialize(username, password, options={})
+      @password = password
+      @client = Jabber::Client.new("#{username}/notable")
+      @echo = false
+      parse_options_hash(options)
     end
 
     # connects and registers the callback which will save messages
@@ -28,12 +29,8 @@ module Notable
     end
 
     protected
-
-    def parse_config(config_file)
-      config = YAML.load_file(config_file)
-      username = config.delete('username') if config.has_key?('username')
-      password = config.delete('password') if config.has_key?('password')
-      return username, password
+    def parse_options_hash(options)
+      @echo = options.delete('echo') if options.has_key?('echo')
     end
   end
 end
