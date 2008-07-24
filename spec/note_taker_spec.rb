@@ -1,3 +1,5 @@
+require "#{File.dirname(__FILE__)}/spec_helper"
+
 describe 'Notable::NoteTaker' do
   describe "#new" do
     describe "with no options" do
