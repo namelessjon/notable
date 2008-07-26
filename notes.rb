@@ -3,10 +3,8 @@ require 'sinatra'
 require 'lib/notable'
 
 configure do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/notes.db")
-  DataMapper.auto_upgrade!
-  @note_taker = Notable::NoteTaker.new('notes.yml', true)
-  @note_taker.connect
+  Notable.setup('notes.yml')
+  Notable.connect
 end
 
 get '/' do
