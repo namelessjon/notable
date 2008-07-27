@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add todoist integration?
+desc: TSIA
+type: :feature
+component: notable
+release: 
+reporter: Jonathan Stott <jonathan.stott@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2008-07-27 01:59:46.429468 Z
+references: []
+
+id: 6cbac449eb24b912c4b288a0cec043eabda9c33f
+log_events: 
+- - 2008-07-27 01:59:47.785295 Z
+  - Jonathan Stott <jonathan.stott@gmail.com>
+  - created
+  - ""

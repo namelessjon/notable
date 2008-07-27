@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add 'last' command
+desc: The last command sends back to the user the last n notes they submitted.
+type: :feature
+component: notable
+release: 
+reporter: Jonathan Stott <jonathan.stott@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2008-07-27 01:52:17.951927 Z
+references: []
+
+id: d58be704eb3a7903d4f04fedda5def7af653ceb2
+log_events: 
+- - 2008-07-27 01:52:19.396741 Z
+  - Jonathan Stott <jonathan.stott@gmail.com>
+  - created
+  - ""
