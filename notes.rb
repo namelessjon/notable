@@ -27,12 +27,12 @@ end
 
 
 
-get '/notable' do
+get '/' do
   @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
   haml :index
 end
 
-get '/notable.txt' do
+get '/notes.txt' do
   @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
   out = []
   @notes.each do |day|
