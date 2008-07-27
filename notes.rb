@@ -7,12 +7,45 @@ configure do
   Notable.connect
 end
 
-get '/' do
-  @notes = Notable::Note.all(:order => [:created_at.desc])
-  @notes_out = []
-  @notes.each do |n|
-    @notes_out << "<li>#{n.created_at} - #{n.body}</li>"
+helpers do
+  def sort_notes(notes)
+    a = []
+    notes.each do |n|
+      if a.empty?
+        a.push [n.created_at_to_s, [n.body]]
+      else
+        if a.last.first == n.created_at_to_s
+          a.last.last.push(n.body)
+        else
+          a.push [n.created_at_to_s, [n.body]]
+        end
+      end
+    end
+    a
   end
-  body "<ul>#{@notes_out.join("\n")}</ul>"
+end
+
+
+
+get '/notable' do
+  @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
+  haml :index
+end
+
+get '/notable.txt' do
+  @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
+  out = []
+  @notes.each do |day|
+    out << day.first
+    day.last.each do |n|
+      out << "  " + n
+    end
+  end
+  body out.join("\n") + "\n"
+end
+
+get '/notable.rss' do
+  @notes = Notable::Note.all(:order => [:created_at.desc])
+  builder :rss
 end
 
