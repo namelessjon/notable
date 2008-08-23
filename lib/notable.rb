@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'xmpp4r'
 require 'dm-core'
 require 'dm-timestamps'
+require 'uppercut'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
 
@@ -22,14 +22,15 @@ module Notable
   # The configuration is used to set up a NoteTaker
   def self.setup(filename)
     @@configuration = Configuration.new(filename)
-    @@note_taker = NoteTaker.new(configuration.jabber_username,
-                                 configuration.jabber_password,
-                                 configuration.jabber_options)
+    @@note_taker = NoteTaker.new("#{configuration.jabber_username}/notable",
+                                 configuration.jabber_password)
   end
 
+  ##
+  # Connects to the database and to the jabber service
   def self.connect
     DataMapper.setup(:default, configuration.database)
-    @@note_taker.connect
+    @@note_taker.listen
   end
 
   ##

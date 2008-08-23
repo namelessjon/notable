@@ -29,8 +29,8 @@ describe "Notable" do
       @klass.setup(@filename)
     end
 
-    it "creates a new notetaker from the configuration" do
-      Notable::NoteTaker.should_receive(:new).with(@username, @password, {})
+    it "creates a new notetaker from the configuration, including a resource name" do
+      Notable::NoteTaker.should_receive(:new).with("#{@username}/notable", @password)
       @klass.setup(@filename)
     end
   end
@@ -55,7 +55,7 @@ describe "Notable" do
     end
 
     it "sets up the jabber connection" do
-      @note_taker.should_receive(:connect).once
+      @note_taker.should_receive(:listen).once
       @klass.connect
     end
   end
