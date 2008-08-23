@@ -22,7 +22,7 @@ module Notable
   # The configuration is used to set up a NoteTaker
   def self.setup(filename)
     @@configuration = Configuration.new(filename)
-    @@note_taker = NoteTaker.new("#{configuration.jabber_username}/notable",
+    @@note_taker = NoteTaker.new("#{configuration.jabber_username}/#{configuration.jabber_resource}",
                                  configuration.jabber_password)
   end
 

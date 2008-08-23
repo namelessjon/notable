@@ -3,7 +3,7 @@ require 'yaml'
 module Notable
   class Configuration
     attr_accessor :config_file
-    attr_reader :jabber_username, :jabber_password, :jabber_options, :database
+    attr_reader :jabber_username, :jabber_password, :jabber_resource, :jabber_options, :database
 
     def initialize(filename)
       @config_file = filename
@@ -23,6 +23,8 @@ module Notable
       unless jabber_password
         raise(Notable::BadConfiguration, "Must specificy a jabber password for the account")
       end
+
+      @jabber_resource = options_hash.delete('resource') || 'notable'
 
       @jabber_options = options_hash
     end

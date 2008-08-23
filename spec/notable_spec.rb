@@ -6,10 +6,12 @@ describe "Notable" do
     @filename = 'notes.yml'
     @username = 'a@b.c'
     @password = 'seekrit'
+    @resource = 'note_test'
     @database_hash = {'adapter' => 'sqlite3', 'database' => ':memory:'}
     @config_hash = { 'jabber' => {
                       'username' => @username,
-                      'password' => @password
+                      'password' => @password,
+                      'resource' => @resource
                     },
                     'database' => @database_hash
                  }
@@ -30,7 +32,7 @@ describe "Notable" do
     end
 
     it "creates a new notetaker from the configuration, including a resource name" do
-      Notable::NoteTaker.should_receive(:new).with("#{@username}/notable", @password)
+      Notable::NoteTaker.should_receive(:new).with("#{@username}/#{@resource}", @password)
       @klass.setup(@filename)
     end
   end
