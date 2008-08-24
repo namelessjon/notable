@@ -8,7 +8,7 @@ xml.rss 'version' => '2.0' do
       xml.item do
         xml.title note.body
         xml.description note.body
-        xml.pubDate note.created_at.strftime('%a, %d %b %Y %H:%M:%S %Z')
+        xml.pubDate note.created_at.new_offset.strftime('%a, %d %b %Y %H:%M:%S GMT')
       end
     end
   end
