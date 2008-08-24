@@ -32,7 +32,7 @@ describe "Notable" do
     end
 
     it "creates a new notetaker from the configuration, including a resource name" do
-      Notable::NoteTaker.should_receive(:new).with("#{@username}/#{@resource}", @password)
+      Notable::NoteTaker.should_receive(:new).with("#{@username}/#{@resource}", @password, false)
       @klass.setup(@filename)
     end
   end
