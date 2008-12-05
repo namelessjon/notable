@@ -5,6 +5,7 @@ rescue LoadError
 end
 require 'dm-core'
 require 'dm-timestamps'
+gem('tyler-uppercut')
 require 'uppercut'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
@@ -27,7 +28,7 @@ module Notable
   def self.setup(filename)
     @@configuration = Configuration.new(filename)
     @@note_taker = NoteTaker.new("#{configuration.jabber_username}/#{configuration.jabber_resource}",
-                                 configuration.jabber_password, false)
+                                 configuration.jabber_password, :connect => false)
   end
 
   ##
