@@ -1,8 +1,0 @@
---- !ditz.rubyforge.org,2008-03-06/project 
-name: notable
-version: "0.3"
-components: 
-- !ditz.rubyforge.org,2008-03-06/component 
-  name: notable
-releases: []
-
