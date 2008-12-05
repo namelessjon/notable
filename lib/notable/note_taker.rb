@@ -21,7 +21,7 @@ module Notable
       end
     end
 
-    command(/^(.*)$/) do |c, rest|
+    command(/^(.*)$/m) do |c, rest|
       Note.create(:body => rest.strip)
     end
   end
