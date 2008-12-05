@@ -1,4 +1,8 @@
-require 'rubygems'
+begin
+  require 'minigems'
+rescue LoadError
+  require 'rubygems'
+end
 require 'sinatra'
 require 'lib/notable'
 
