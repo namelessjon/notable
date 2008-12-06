@@ -47,6 +47,17 @@ get '/' do
   end
 end
 
+post '/' do
+  @note = Notable::Note.new(:body => params['note'])
+  if @note.save
+    status 201
+    headers['Location'] = link_to('/')
+    body "Note created!\n"
+  else
+    throw :halt, [400, @note.errors.full_messages.join("\n") + "\n"]
+  end
+end
+
 get '/notes.txt' do
   @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
   out = []
