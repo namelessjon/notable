@@ -47,6 +47,23 @@ get '/' do
   end
 end
 
+['/last/:count', '/last/', '/last'].each do |url|
+  get url do
+    count = params['count'].to_i
+    if (count < 1)
+      count = 5
+    end
+    @notes = Notable::Note.all(:order => [:created_at.desc],
+                               :limit => count)
+    case request.env['HTTP_ACCEPT']
+    when 'application/json'
+      body(@notes.to_json)
+    else
+      body(haml(:index))
+    end
+  end
+end
+
 post '/' do
   @note = Notable::Note.new(:body => params['note'])
   if @note.save
