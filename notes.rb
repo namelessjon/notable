@@ -12,6 +12,12 @@ configure do
 end
 
 helpers do
+  def link_to(url)
+    "#{request.env['SCRIPT_NAME']}#{url}"
+  end
+  def format_note(note)
+    "#{note.body} - <em>#{note.created_at.strftime('%H:%M')} #{note.created_at_to_s}</em>"
+  end
   def sort_notes(notes)
     a = []
     notes.each do |n|
@@ -32,8 +38,13 @@ end
 
 
 get '/' do
-  @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
-  haml :index
+  @notes = Notable::Note.all(:order => [:created_at.desc])
+  case request.env['HTTP_ACCEPT']
+  when 'application/json'
+    body(@notes.to_json)
+  else
+    body(haml(:index))
+  end
 end
 
 get '/notes.txt' do
@@ -53,3 +64,51 @@ get '/notable.rss' do
   builder :rss
 end
 
+get '/style.css' do
+  content_type :css
+  <<-eos
+  @import url("http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css");
+  html {
+    font-size: 62.5%;
+    font-family: "Tahoma";
+  }
+  body {
+    background-color: #333;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  #doc {
+    background-color: #ddd;
+    bottom: 0;
+    top: 0;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #container {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 750px;
+    width: 59.97em;
+  }
+  ul {
+    margin: 20px 20px 20px 20px;
+  }
+  li {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+  em {
+    font-style: italic;
+    color: #fff;
+  }
+  h1 {
+    font-size: 3em;
+  }
+  eos
+end

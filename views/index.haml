@@ -1,12 +1,12 @@
 !!!
 %html
   %head
+    %link{:rel => "stylesheet", :type => "text/css", :href => link_to("/style.css")}
     %title Notable
   %body
-  %h1 Notes
-  - @notes.each do |day|
-    .day
-      %h2= day.first
-      %ul
-        - day.last.each do |note|
-          %li= note
+    #container
+      #doc
+        %h1 Notes
+        %ul
+          - @notes.each do |note|
+            %li= format_note(note)
