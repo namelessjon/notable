@@ -5,6 +5,7 @@ rescue LoadError
 end
 require 'dm-core'
 require 'dm-timestamps'
+require 'dm-serializer'
 gem('tyler-uppercut')
 require 'uppercut'
 
