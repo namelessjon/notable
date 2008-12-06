@@ -18,9 +18,9 @@ module Notable
 
     def created_at_to_s
       if sent_today?
-        "Today:"
+        "Today"
       else
-        created_at.strftime('%d %b:')
+        created_at.strftime('%d %b')
       end
     end
   end
