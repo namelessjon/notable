@@ -15,9 +15,20 @@ helpers do
   def link_to(url)
     "#{request.env['SCRIPT_NAME']}#{url}"
   end
+
   def format_note(note)
     "#{note.body} - <em>#{note.created_at.strftime('%H:%M')} #{note.created_at_to_s}</em>"
   end
+
+  def choose_format
+    case request.env['HTTP_ACCEPT']
+    when 'application/json'
+      body(@notes.to_json)
+    else
+      body(haml(:index))
+    end
+  end
+
   def sort_notes(notes)
     a = []
     notes.each do |n|
@@ -39,12 +50,7 @@ end
 
 get '/' do
   @notes = Notable::Note.all(:order => [:created_at.desc])
-  case request.env['HTTP_ACCEPT']
-  when 'application/json'
-    body(@notes.to_json)
-  else
-    body(haml(:index))
-  end
+  choose_format
 end
 
 ['/last/:count', '/last/', '/last'].each do |url|
@@ -56,24 +62,14 @@ end
     @notes = Notable::Note.all(:order => [:created_at.desc],
                                :limit => count)
     @title = "Last #{count} Notes"
-    case request.env['HTTP_ACCEPT']
-    when 'application/json'
-      body(@notes.to_json)
-    else
-      body(haml(:index))
-    end
+    choose_format
   end
 end
 
 get '/search' do
   @title = "Notes - #{params['q']}"
   @notes = Notable::Note.all(:body.like => "%#{params['q']}%")
-  case request.env['HTTP_ACCEPT']
-  when 'application/json'
-    body(@notes.to_json)
-  else
-    body(haml(:index))
-  end
+  choose_format
 end
 
 post '/' do
