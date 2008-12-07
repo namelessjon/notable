@@ -1,7 +1,3 @@
-jabber:
-  username: notes@example.com
-  password: example_password
-  resource: notable
 database: # needs to be a symbol for DM
   :adapter: sqlite3
   :database: notes.db
