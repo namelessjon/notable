@@ -8,11 +8,7 @@ describe "Notable" do
     @password = 'seekrit'
     @resource = 'note_test'
     @database_hash = {'adapter' => 'sqlite3', 'database' => ':memory:'}
-    @config_hash = { 'jabber' => {
-                      'username' => @username,
-                      'password' => @password,
-                      'resource' => @resource
-                    },
+    @config_hash = { 
                     'database' => @database_hash
                  }
     YAML.stub!(:load_file).and_return(@config_hash)
@@ -30,11 +26,6 @@ describe "Notable" do
       Notable::Configuration.should_receive(:new).with(@filename).and_return(@conf)
       @klass.setup(@filename)
     end
-
-    it "creates a new notetaker from the configuration, including a resource name" do
-      Notable::NoteTaker.should_receive(:new).with("#{@username}/#{@resource}", @password, false)
-      @klass.setup(@filename)
-    end
   end
 
 
@@ -42,8 +33,6 @@ describe "Notable" do
     before(:each) do
       # we don't actually want to connect!
       DataMapper.stub!(:setup)
-      @note_taker = mock('note_taker', :null_object => true)
-      Notable::NoteTaker.stub!(:new).and_return(@note_taker)
       @klass.setup(@filename)
     end
 
@@ -53,11 +42,6 @@ describe "Notable" do
 
     it "sets up the DataMapper connection" do
       DataMapper.should_receive(:setup).with(:default, @database_hash)
-      @klass.connect
-    end
-
-    it "sets up the jabber connection" do
-      @note_taker.should_receive(:listen).once
       @klass.connect
     end
   end
@@ -71,18 +55,6 @@ describe "Notable" do
     it "returns a configuration after setup" do
       @klass.setup(@filename)
       @klass.configuration.should be_an_instance_of(Notable::Configuration)
-    end
-  end
-
-
-  describe "#note_taker" do
-    it "responds to #note_taker" do
-      @klass.should respond_to(:note_taker)
-    end
-
-    it "returns a note_taker after setup" do
-      @klass.setup(@filename)
-      @klass.note_taker.should be_an_instance_of(Notable::NoteTaker)
     end
   end
 end

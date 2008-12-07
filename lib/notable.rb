@@ -7,13 +7,10 @@ require 'dm-core'
 require 'dm-timestamps'
 require 'dm-serializer'
 require 'dm-validations'
-gem('tyler-uppercut')
-require 'uppercut'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
 
 require 'notable/note'
-require 'notable/note_taker'
 require 'notable/configuration'
 
 module Notable
@@ -29,27 +26,18 @@ module Notable
   # The configuration is used to set up a NoteTaker
   def self.setup(filename)
     @@configuration = Configuration.new(filename)
-    @@note_taker = NoteTaker.new("#{configuration.jabber_username}/#{configuration.jabber_resource}",
-                                 configuration.jabber_password, :connect => false)
   end
 
   ##
   # Connects to the database and to the jabber service
   def self.connect
     DataMapper.setup(:default, configuration.database)
-    @@note_taker.listen
   end
 
   ##
   # Provides access to the Configuration
   def self.configuration
     @@configuration
-  end
-
-  ##
-  # Provides access to the NoteTaker
-  def self.note_taker
-    @@note_taker
   end
 end
 
