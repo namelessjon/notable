@@ -2,11 +2,11 @@
 %html
   %head
     %link{:rel => "stylesheet", :type => "text/css", :href => link_to("/style.css")}
-    %title Notable
+    %title= "Notable - #{@title || 'Notes'}"
   %body
     #container
       #doc
-        %h1 Notes
+        %h1= @title || 'Notes'
         %ul
           - @notes.each do |note|
             %li= format_note(note)

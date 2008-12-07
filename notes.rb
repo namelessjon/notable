@@ -55,12 +55,24 @@ end
     end
     @notes = Notable::Note.all(:order => [:created_at.desc],
                                :limit => count)
+    @title = "Last #{count} Notes"
     case request.env['HTTP_ACCEPT']
     when 'application/json'
       body(@notes.to_json)
     else
       body(haml(:index))
     end
+  end
+end
+
+get '/search' do
+  @title = "Notes - #{params['q']}"
+  @notes = Notable::Note.all(:body.like => "%#{params['q']}%")
+  case request.env['HTTP_ACCEPT']
+  when 'application/json'
+    body(@notes.to_json)
+  else
+    body(haml(:index))
   end
 end
 
