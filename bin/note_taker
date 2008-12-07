@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'minigems'
+rescue LoadError
+  require 'rubygems'
+end
+
+require 'daemons'
+require 'etc'
+require 'yaml'
+require 'optparse'
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+require 'notable/note_taker'
+
+# Change privileges of the process
+# to the specified user and group.
+# Taken from Thin 1.0.0
+def change_privilege(user, group=user)
+  puts ">> Changing process privilege to #{user}:#{group}"
+
+  uid, gid = Process.euid, Process.egid
+  target_uid = Etc.getpwnam(user).uid
+  target_gid = Etc.getgrnam(group).gid
+
+  if uid != target_uid || gid != target_gid
+    # Change process ownership
+    Process.initgroups(user, target_gid)
+    Process::GID.change_privilege(target_gid)
+    Process::UID.change_privilege(target_uid)
+  end
+rescue Errno::EPERM => e
+  puts "Couldn't change user and group to #{user}:#{group}: #{e}"
+end
+
+
+class NoteTakerArgs < Hash
+  def initialize(args)
+    super()
+
+    opts = OptionParser.new do |o|
+      o.banner =  "Usage: #{$0} [options] start|stop|run"
+      o.on('-C FILE', '--config FILE', 'Load config options from file') do |f|
+        self['config_file'] = f
+      end
+      o.on('-U USER', '--system-user USER',
+            'Change to USER before running') do |u|
+        self['system_user'] = u
+      end
+      o.on('-G GROUP', '--system-group GROUP',
+                       'Change to GROUP before running') do |g|
+        self['system_group'] = g
+      end
+      o.on('-u USER', '--user USER', 'jabber USER to connect as') do |u|
+        self['jabber_username'] = u
+      end
+      o.on('-p PASS', '--password PASS', 'jabber PASS to connect with') do |p|
+        self['jabber_password'] = p
+      end
+      o.on('-d DEST', '--destination DEST',
+                          'Root url to post messages to') do |r|
+        self['url'] = r
+      end
+
+    end
+
+    opts.parse!(args)
+    if self['config_file']
+      self.merge!(YAML.load_file(self['config_file']))
+    end
+  end
+end
+
+opts = NoteTakerArgs.new(ARGV)
+p opts
+
+if opts['system_user'] && opts['system_group']
+  change_privilege(opts['system_user'], opts['system_group'])
+elsif opts['system_user']
+  change_privilege(opts['system_user'])
+end
+
+
+@note_taker =  NoteTaker.new(opts)
+
+
+trap('INT') { exit }
+
+Daemons.run_proc('note_taker') do
+  @note_taker.listen
+  loop do
+    sleep(10)
+  end
+end
