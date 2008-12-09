@@ -4,12 +4,18 @@ rescue LoadError
   require 'rubygems'
 end
 require 'sinatra'
+
+gem('rack-contrib')
+require 'rack/content_length'
+
 require 'lib/notable'
 
 configure do
   Notable.setup('notes.yml')
   Notable.connect
 end
+
+use Rack::ContentLength
 
 helpers do
   def link_to(url)
