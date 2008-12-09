@@ -29,6 +29,7 @@ helpers do
   def choose_format
     case request.env['HTTP_ACCEPT']
     when 'application/json'
+      content_type 'application/json'
       body(@notes.to_json)
     else
       body(haml(:index))
@@ -103,6 +104,7 @@ end
 
 get '/notable.rss' do
   @notes = Notable::Note.all(:order => [:created_at.desc])
+  content_type :xml
   builder :rss
 end
 
