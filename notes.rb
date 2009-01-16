@@ -79,7 +79,9 @@ class Notes < Sinatra::Base
   end
 
   post '/' do
-    @note = Notable::Note.new(:body => params['note'])
+    note_body = params['note'] || request.body.read
+
+    @note = Notable::Note.new(:body => note_body)
     if @note.save
       status 201
       response.headers['Location'] = link_to('/')
