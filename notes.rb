@@ -3,7 +3,7 @@ begin
 rescue LoadError
   require 'rubygems'
 end
-gem('sinatra', '~> 0.8.9')
+gem('sinatra-sinatra')
 require 'sinatra/base'
 
 require 'lib/notable'
