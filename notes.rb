@@ -84,7 +84,7 @@ class Notes < Sinatra::Base
     @note = Notable::Note.new(:body => note_body)
     if @note.save
       status 201
-      response.headers['Location'] = link_to('/')
+      response['Location'] = link_to('/')
       body "Note created!\n"
     else
       throw :halt, [400, @note.errors.full_messages.join("\n") + "\n"]
