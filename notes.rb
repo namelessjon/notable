@@ -100,6 +100,7 @@ class Notes < Sinatra::Base
         out << "  " + n
       end
     end
+    content_type :text
     body out.join("\n") + "\n"
   end
 
