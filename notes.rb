@@ -107,7 +107,7 @@ class Notes < Sinatra::Base
   get '/notable.rss' do
     @notes = Notable::Note.all(:order => [:created_at.desc])
     content_type :xml
-    builder :rss
+    haml :rss
   end
 
   get '/style.css' do

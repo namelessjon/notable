@@ -1,0 +1,13 @@
+!!! XML
+%rss{:version => '2.0'}
+  %channel
+    %title Notable
+    %link= link_to('/notable')
+    %description Things that have been noted
+    %image{'title' => 'notable', 'url' => link_to('feed_edit.png'), 'link' => link_to('/notable')}
+    - @notes.each do |note|
+      %item
+        %title&= note.body
+        %description&= note.body
+        %pubDate= note.created_at.new_offset.strftime('%a, %d %b %Y %H:%M:%S GMT')
+
