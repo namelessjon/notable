@@ -18,8 +18,20 @@ class Notes < Sinatra::Base
   enable :static, :logging
 
   # helpers
-  def link_to(url)
-    "#{request.env['SCRIPT_NAME']}#{url}"
+  def link_to(page = '/')
+    "#{request.env['SCRIPT_NAME']}#{page}"
+  end
+
+  def hostname
+    if request.env['HTTP_X_FORWARDED_PROTO'] == 'https'
+      "https://#{request.env['SERVER_NAME']}"
+    else
+      "http://#{request.env['SERVER_NAME']}:#{request.env['SERVER_PORT']}"
+    end
+  end
+
+  def absolute_url(page = '/')
+    "#{hostname}#{link_to(page)}"
   end
 
   def format_note(note)
