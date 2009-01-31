@@ -1,9 +1,3 @@
-begin
-  require 'minigems'
-rescue LoadError
-  require 'rubygems'
-end
-gem('sinatra-sinatra')
 require 'sinatra/base'
 
 require 'lib/notable'
