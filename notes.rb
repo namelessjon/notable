@@ -5,8 +5,7 @@ require 'lib/notable'
 class Notes < Sinatra::Base
 
   configure do
-    Notable.setup('notes.yml')
-    Notable.connect
+    DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite3:notes.db')
   end
 
   enable :static, :logging
