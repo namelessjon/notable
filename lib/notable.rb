@@ -1,8 +1,3 @@
-begin
-  require 'minigems'
-rescue LoadError
-  require 'rubygems'
-end
 require 'dm-core'
 require 'dm-timestamps'
 require 'dm-serializer'
