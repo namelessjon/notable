@@ -1,5 +1,9 @@
+require 'rake/testtask'
 
-desc 'Run the specs'
-task :spec do
-  sh "spec -rspec/spec_helper.rb --colour -p '**/*_spec.rb' spec"
+Rake::TestTask.new(:spec) do |t|
+  t.libs << 'lib'
+  t.pattern = 'spec/**/*_spec.rb'
+  t.verbose = false
 end
+
+task :default => :spec
