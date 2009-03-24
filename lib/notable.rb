@@ -5,8 +5,10 @@ require 'dm-validations'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
 
-require 'notable/note'
-
 module Notable
 end
+
+require 'notable/app'
+require 'notable/note'
+
 

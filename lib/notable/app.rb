@@ -1,8 +1,6 @@
 require 'sinatra/base'
 
-require 'lib/notable'
-
-class Notes < Sinatra::Base
+class Notable::App < Sinatra::Base
 
   configure do
     DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite3:notes.db')

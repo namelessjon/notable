@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 
 # make sure we'll connect to a temporary db, not any one that matters
 ENV['DATABASE_URL'] = 'sqlite3::memory:'
-require File.join(File.dirname(__FILE__), '..', 'notes')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'notable')
 
 # require some bits and bobs to help
 require 'rack/test'
@@ -14,7 +14,7 @@ class Bacon::Context
   include Rack::Test::Methods
 
   def app
-    Notes.new
+    Notable::App.new
   end
 
   def parsed_body
