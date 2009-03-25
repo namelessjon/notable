@@ -59,22 +59,20 @@ describe 'Notable::App (pristine)' do
     end
 
     describe "JSON" do
-      describe "get '/'" do
-        before do
-          get_json '/'
-        end
+      before do
+        get_json '/'
+      end
 
-        it "has a / route" do
-          last_response.should.be.ok
-        end
+      it "has a / route" do
+        last_response.should.be.ok
+      end
 
-        it "returns the correct mime-type" do
-          last_response.content_type.should.equal 'application/json'
-        end
+      it "returns the correct mime-type" do
+        last_response.content_type.should.equal 'application/json'
+      end
 
-        it "returns an empty array" do
-          parsed_json.should.equal []
-        end
+      it "returns an empty array" do
+        parsed_json.should.equal []
       end
     end
   end
