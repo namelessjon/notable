@@ -76,6 +76,23 @@ describe 'Notable::App (pristine)' do
       end
     end
   end
+  describe "get '/style.css'" do
+    before do
+      get '/style.css'
+    end
+
+    it "should be succesful" do
+      last_response.should.be.ok
+    end
+
+    it "should have `text/css' content type" do
+      last_response.content_type.should.equal 'text/css'
+    end
+
+    it "should have a `Last-Modified' header" do
+      last_response.header.should.has_key('Last-Modified')
+    end
+  end
 end
 
 describe "Notable::App - Note Creation" do

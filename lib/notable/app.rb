@@ -122,6 +122,8 @@ class Notable::App < Sinatra::Base
 
   get '/style.css' do
     content_type :css
+    last_modified File.mtime(__FILE__)
+    body do
     <<-eos
 @import url("http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css");
 html {
@@ -167,5 +169,6 @@ h1 {
   font-size: 3em;
 }
 eos
+  end
   end
 end
