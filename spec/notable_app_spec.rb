@@ -32,6 +32,7 @@ class Bacon::Context
   def get_json(route, params = {}, env = {}, &block)
     get(route, params, env.merge('HTTP_ACCEPT' => 'application/json'), &block)
   end
+
 end
 
 describe 'Notes' do
@@ -63,7 +64,7 @@ describe 'Notes' do
     end
 
     it "returns 201 Created" do
-      last_response.status.should == 201
+      last_response.status.should.equal 201
     end
 
     it "returns `Note created!'" do
@@ -71,13 +72,13 @@ describe 'Notes' do
     end
 
     it "returns '/' in the location header" do
-      last_response['Location'].should == '/'
+      last_response['Location'].should.equal '/'
     end
 
     it "actually creates a note" do
       get '/'
       parsed_body.at('//body//li').should.not.be.nil
-      parsed_body.at('//body//li').inner_html.should =~ /^A new note!/
+      parsed_body.at('//body//li').inner_html.should.match(/^A new note!/)
     end
   end
 
@@ -87,7 +88,7 @@ describe 'Notes' do
     end
 
     it "returns 201 Created" do
-      last_response.status.should == 201
+      last_response.status.should.equal 201
     end
 
     it "returns `Note created!'" do
@@ -95,13 +96,13 @@ describe 'Notes' do
     end
 
     it "returns '/' in the location header" do
-      last_response['Location'].should == '/'
+      last_response['Location'].should.equal '/'
     end
 
     it "actually creates a note" do
       get '/'
       parsed_body.at('//body//li').should.not.be.nil
-      parsed_body.at('//body//li').inner_html.should =~ /^A new note!/
+      parsed_body.at('//body//li').inner_html.should.match(/^A new note!/)
     end
   end
 
@@ -111,7 +112,7 @@ describe 'Notes' do
     end
 
     it "returns 400 Bad Request" do
-      last_response.status.should == 400
+      last_response.status.should.equal 400
     end
 
     it "returns appropriate errors" do
@@ -128,22 +129,22 @@ describe 'Notes' do
 
     it "gets 5 by default" do
       get '/last'
-      parsed_body.search('//body//li').size.should == 5
+      parsed_body.search('//body//li').size.should.equal 5
     end
 
     it "gets 1 when you ask for it" do
       get '/last/1'
-      parsed_body.search('//body//li').size.should == 1
+      parsed_body.search('//body//li').size.should.equal 1
     end
 
     it "gets more than 5 when you ask for it" do
       get '/last/7'
-      parsed_body.search('//body//li').size.should == 6
+      parsed_body.search('//body//li').size.should.equal 6
     end
 
     it "gets five when you give it a silly request" do
       get '/last/foo'
-      parsed_body.search('//body//li').size.should == 5
+      parsed_body.search('//body//li').size.should.equal 5
     end
   end
 
@@ -156,7 +157,7 @@ describe 'Notes' do
     end
 
     it "is successful" do
-      last_response.status.should == 200
+      last_response.status.should.equal 200
     end
 
     it "returns notes which match" do
@@ -181,7 +182,7 @@ describe 'Notes' do
     end
 
     it "has the `application/xml' mime-type" do
-      last_response.content_type.should == 'application/xml'
+      last_response.content_type.should.equal 'application/xml'
     end
 
     it "is an rss 2.0 feed" do
@@ -197,7 +198,7 @@ describe 'Notes' do
     end
 
     it "has the correct number of items" do
-      parsed_xml.search('/rss/channel/item').size.should == 3
+      parsed_xml.search('/rss/channel/item').size.should.equal 3
     end
 
     describe "an item" do
@@ -214,7 +215,7 @@ describe 'Notes' do
       end
 
       it "has a timestamp in the correct format" do
-        @item.at('/pubDate').inner_html.should =~ /\w{3}, \d{2} \w{3} \d{4} \d{2}\:\d{2}\:\d{2} GMT/
+        @item.at('/pubDate').inner_html.should.match(/\w{3}, \d{2} \w{3} \d{4} \d{2}\:\d{2}\:\d{2} GMT/)
       end
     end
   end
@@ -230,11 +231,11 @@ describe 'Notes' do
       end
 
       it "returns the correct mime-type" do
-        last_response.content_type.should == 'application/json'
+        last_response.content_type.should.equal 'application/json'
       end
 
       it "returns an empty array" do
-        parsed_json.should == []
+        parsed_json.should.equal []
       end
     end
 
@@ -252,11 +253,11 @@ describe 'Notes' do
         end
 
         it "returns an array of the items" do
-          parsed_json.size.should == 6
+          parsed_json.size.should.equal 6
         end
 
         it "returns an array of hashes" do
-          @item.class.should == Hash
+          @item.class.should.equal Hash
           @item.should.has_key('id')
           @item.should.has_key('body')
           @item.should.has_key('created_at')
@@ -266,22 +267,22 @@ describe 'Notes' do
       describe "get '/last'" do
         it "gets 5 by default" do
           get_json '/last'
-          parsed_json.size.should == 5
+          parsed_json.size.should.equal 5
         end
 
         it "gets 1 when you ask for it" do
           get_json '/last/1'
-          parsed_json.size.should == 1
+          parsed_json.size.should.equal 1
         end
 
         it "gets more than 5 when you ask for it" do
           get_json '/last/7'
-          parsed_json.size.should == 6
+          parsed_json.size.should.equal 6
         end
 
         it "gets five when you give it a silly request" do
           get_json '/last/foo'
-          parsed_json.size.should == 5
+          parsed_json.size.should.equal 5
         end
       end
       describe "get '/search?q='" do
@@ -291,11 +292,11 @@ describe 'Notes' do
         end
 
         it "is successful" do
-          last_response.status.should == 200
+          last_response.should.be.ok
         end
 
         it "returns notes which match" do
-          @json.size.should == 3
+          @json.size.should.equal 3
           @json.detect { |hash| hash['body'] == 'dog' }.should.not.be.nil
           @json.detect { |hash| hash['body'] == 'dolphin' }.should.not.be.nil
           @json.detect { |hash| hash['body'] == 'pony' }.should.not.be.nil
