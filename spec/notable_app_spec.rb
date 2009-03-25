@@ -35,30 +35,56 @@ class Bacon::Context
 
 end
 
-describe 'Notes' do
+DataMapper.auto_migrate!
+
+describe 'Notable::App (pristine)' do
+  describe "get '/'" do
+    describe "HTML" do
+      before do
+        get '/'
+      end
+
+      it "has a / route" do
+        last_response.should.be.ok
+      end
+
+      it "has a list of nodes" do
+        parsed_body.at('//body//ul').should.not.be.nil
+      end
+
+      it "the list is empty" do
+        parsed_body.at('//body//ul/li').should.be.nil
+      end
+    end
+
+    describe "JSON" do
+      describe "get '/'" do
+        before do
+          get_json '/'
+        end
+
+        it "has a / route" do
+          last_response.should.be.ok
+        end
+
+        it "returns the correct mime-type" do
+          last_response.content_type.should.equal 'application/json'
+        end
+
+        it "returns an empty array" do
+          parsed_json.should.equal []
+        end
+      end
+    end
+  end
+end
+
+describe "Notable::App - Note Creation" do
   before do
     DataMapper.auto_migrate!
   end
 
-  describe "get '/' in a new app" do
-    before do
-      get '/'
-    end
-
-    it "has a / route" do
-      last_response.should.be.ok
-    end
-
-    it "has a list of nodes" do
-      parsed_body.at('//body//ul').should.not.be.nil
-    end
-
-    it "the list is empty" do
-      parsed_body.at('//body//ul/li').should.be.nil
-    end
-  end
-
-  describe "post '/' with a valid note" do
+  describe "post '/' with note params" do
     before do
       post '/', :note => 'A new note!'
     end
@@ -119,61 +145,142 @@ describe 'Notes' do
       last_response.body.should.include("Body must not be blank\n")
     end
   end
+end
 
-  describe "get '/last(/:n)'" do
-    before do
-      %w{a b c d e f}.each do |note|
-        post '/', :note => note
-      end
-    end
 
-    it "gets 5 by default" do
-      get '/last'
-      parsed_body.search('//body//li').size.should.equal 5
-    end
 
-    it "gets 1 when you ask for it" do
-      get '/last/1'
-      parsed_body.search('//body//li').size.should.equal 1
-    end
-
-    it "gets more than 5 when you ask for it" do
-      get '/last/7'
-      parsed_body.search('//body//li').size.should.equal 6
-    end
-
-    it "gets five when you give it a silly request" do
-      get '/last/foo'
-      parsed_body.search('//body//li').size.should.equal 5
+describe "With Some Notes" do
+  before do
+    DataMapper.auto_migrate!
+    @notes = %w{bat cat dog dolphin giraffe pony}
+    @notes.each do |n|
+      post '/', :note => n
     end
   end
 
-  describe "get '/search?q='" do
-    before do
-      %w{foo bar baz}.each do |note|
-        post '/', :note => note
+  describe "HTML" do
+    describe "get '/'" do
+      before do
+        get '/'
       end
-      get '/search?q=a'
+
+      it "should be successful" do
+        last_response.should.be.ok
+      end
+
+      it "should have all the items in a list" do
+        parsed_body.search('//body//li').size.should.equal 6
+      end
     end
 
-    it "is successful" do
-      last_response.status.should.equal 200
+    describe "get '/last(/:n)'" do
+      it "gets 5 by default" do
+        get '/last'
+        parsed_body.search('//body//li').size.should.equal 5
+      end
+
+      it "gets 1 when you ask for it" do
+        get '/last/1'
+        parsed_body.search('//body//li').size.should.equal 1
+      end
+
+      it "gets more than 5 when you ask for it" do
+        get '/last/7'
+        parsed_body.search('//body//li').size.should.equal 6
+      end
+
+      it "gets five when you give it a silly request" do
+        get '/last/foo'
+        parsed_body.search('//body//li').size.should.equal 5
+      end
     end
 
-    it "returns notes which match" do
-      parsed_body.at('//li[text()^="bar"]').should.not.be.nil
-      parsed_body.at('//li[text()^="baz"]').should.not.be.nil
+    describe "get '/search?q='" do
+      before do
+        get '/search?q=g'
+      end
+
+      it "is successful" do
+        last_response.status.should.equal 200
+      end
+
+      it "returns notes which match" do
+        parsed_body.at('//li[text()^="giraffe"]').should.not.be.nil
+        parsed_body.at('//li[text()^="dog"]').should.not.be.nil
+      end
+      it "doesn't return notes which don't match" do
+        (@notes - %w{giraffe dog}).each do |n|
+          parsed_body.at("//li[text()^='#{n}']").should.be.nil
+        end
+      end
     end
-    it "doesn't return notes which don't match" do
-      parsed_body.at('//li[text()^="foo"]').should.be.nil
+  end
+
+  describe 'JSON' do
+    describe "get '/'" do
+      before do
+        get_json '/'
+        @item = parsed_json.first
+      end
+
+      it "returns an array of the items" do
+        parsed_json.size.should.equal 6
+      end
+
+      it "returns an array of hashes" do
+        @item.class.should.equal Hash
+        @item.should.has_key('id')
+        @item.should.has_key('body')
+        @item.should.has_key('created_at')
+      end
+    end
+
+    describe "get '/last'" do
+      it "gets 5 by default" do
+        get_json '/last'
+        parsed_json.size.should.equal 5
+      end
+
+      it "gets 1 when you ask for it" do
+        get_json '/last/1'
+        parsed_json.size.should.equal 1
+      end
+
+      it "gets more than 5 when you ask for it" do
+        get_json '/last/7'
+        parsed_json.size.should.equal 6
+      end
+
+      it "gets five when you give it a silly request" do
+        get_json '/last/foo'
+        parsed_json.size.should.equal 5
+      end
+    end
+
+    describe "get '/search?q='" do
+      before do
+        get_json '/search?q=o'
+        @json = parsed_json
+      end
+
+      it "is successful" do
+        last_response.should.be.ok
+      end
+
+      it "returns notes which match" do
+        @json.size.should.equal 3
+        @json.detect { |hash| hash['body'] == 'dog' }.should.not.be.nil
+        @json.detect { |hash| hash['body'] == 'dolphin' }.should.not.be.nil
+        @json.detect { |hash| hash['body'] == 'pony' }.should.not.be.nil
+      end
+      it "doesn't return notes which don't match" do
+        @json.detect { |hash| hash['body'] == 'cat' }.should.be.nil
+      end
     end
   end
 
   describe "get '/notable.rss'" do
     before do
-      %w{foo bar baz}.each do |note|
-        post '/', :note => note
-      end
       get '/notable.rss'
     end
 
@@ -198,7 +305,7 @@ describe 'Notes' do
     end
 
     it "has the correct number of items" do
-      parsed_xml.search('/rss/channel/item').size.should.equal 3
+      parsed_xml.search('/rss/channel/item').size.should.equal 6
     end
 
     describe "an item" do
@@ -207,11 +314,11 @@ describe 'Notes' do
       end
 
       it "has the correct title" do
-        @item.at('/title[text()="foo"]').should.not.be.nil
+        @item.at('/title[text()="bat"]').should.not.be.nil
       end
 
       it "has the correct description" do
-        @item.at('/description[text()="foo"]').should.not.be.nil
+        @item.at('/description[text()="bat"]').should.not.be.nil
       end
 
       it "has a timestamp in the correct format" do
@@ -219,95 +326,5 @@ describe 'Notes' do
       end
     end
   end
-
-  describe 'JSON requests' do
-    describe "get '/' in a new app" do
-      before do
-        get_json '/'
-      end
-
-      it "has a / route" do
-        last_response.should.be.ok
-      end
-
-      it "returns the correct mime-type" do
-        last_response.content_type.should.equal 'application/json'
-      end
-
-      it "returns an empty array" do
-        parsed_json.should.equal []
-      end
-    end
-
-    describe "with some notes" do
-      before do
-        %w{bat cat dog giraffe dolphin pony}.each do |note|
-          post '/', :note => note
-        end
-      end
-
-      describe "get '/'" do
-        before do
-          get_json '/'
-          @item = parsed_json.first
-        end
-
-        it "returns an array of the items" do
-          parsed_json.size.should.equal 6
-        end
-
-        it "returns an array of hashes" do
-          @item.class.should.equal Hash
-          @item.should.has_key('id')
-          @item.should.has_key('body')
-          @item.should.has_key('created_at')
-        end
-      end
-
-      describe "get '/last'" do
-        it "gets 5 by default" do
-          get_json '/last'
-          parsed_json.size.should.equal 5
-        end
-
-        it "gets 1 when you ask for it" do
-          get_json '/last/1'
-          parsed_json.size.should.equal 1
-        end
-
-        it "gets more than 5 when you ask for it" do
-          get_json '/last/7'
-          parsed_json.size.should.equal 6
-        end
-
-        it "gets five when you give it a silly request" do
-          get_json '/last/foo'
-          parsed_json.size.should.equal 5
-        end
-      end
-      describe "get '/search?q='" do
-        before do
-          get_json '/search?q=o'
-          @json = parsed_json
-        end
-
-        it "is successful" do
-          last_response.should.be.ok
-        end
-
-        it "returns notes which match" do
-          @json.size.should.equal 3
-          @json.detect { |hash| hash['body'] == 'dog' }.should.not.be.nil
-          @json.detect { |hash| hash['body'] == 'dolphin' }.should.not.be.nil
-          @json.detect { |hash| hash['body'] == 'pony' }.should.not.be.nil
-        end
-        it "doesn't return notes which don't match" do
-          @json.detect { |hash| hash['body'] == 'cat' }.should.be.nil
-        end
-      end
-    end
-  end
 end
-
-
 
