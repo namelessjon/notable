@@ -8,6 +8,7 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'notable')
 require 'rack/test'
 require 'hpricot'
 require 'json'
+require 'timecop'
 
 # setup everything for bacon!
 class Bacon::Context
@@ -153,8 +154,10 @@ describe "With Some Notes" do
   before do
     DataMapper.auto_migrate!
     @notes = %w{bat cat dog dolphin giraffe pony}
-    @notes.each do |n|
-      post '/', :note => n
+    @notes.each_with_index do |n, i|
+      Timecop.travel(2009, 3, 25, 10, 10, i) do
+        post '/', :note => n
+      end
     end
   end
 
@@ -292,6 +295,10 @@ describe "With Some Notes" do
       last_response.content_type.should.equal 'application/xml'
     end
 
+    it "has a `Last-Modified' header" do
+      last_response.header.should.has_key('Last-Modified')
+    end
+
     it "is an rss 2.0 feed" do
       parsed_xml.at('/rss[@version="2.0"]').should.not.be.nil
     end
@@ -314,15 +321,15 @@ describe "With Some Notes" do
       end
 
       it "has the correct title" do
-        @item.at('/title[text()="bat"]').should.not.be.nil
+        @item.at('/title[text()="pony"]').should.not.be.nil
       end
 
       it "has the correct description" do
-        @item.at('/description[text()="bat"]').should.not.be.nil
+        @item.at('/description[text()="pony"]').should.not.be.nil
       end
 
-      it "has a timestamp in the correct format" do
-        @item.at('/pubDate').inner_html.should.match(/\w{3}, \d{2} \w{3} \d{4} \d{2}\:\d{2}\:\d{2} GMT/)
+      it "has the correct timestamp" do
+        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:05 GMT")
       end
     end
   end
