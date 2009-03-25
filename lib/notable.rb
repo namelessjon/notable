@@ -2,6 +2,7 @@ require 'dm-core'
 require 'dm-timestamps'
 require 'dm-serializer'
 require 'dm-validations'
+require 'dm-aggregates'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
 

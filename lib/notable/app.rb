@@ -108,10 +108,16 @@ class Notable::App < Sinatra::Base
   end
 
   get '/notable.rss' do
-    @notes = Notable::Note.all(:order => [:created_at.desc])
-    last_modified(@notes.first ? @notes.first.created_at : Time.at(1))
+    @last_modified = Notable::Note.max(:created_at)
+
+    last_modified(@last_modified ? @last_modified : Time.at(0))
+
     content_type :xml
-    haml :rss
+
+    body do
+      @notes = Notable::Note.all(:order => [:created_at.desc])
+      haml :rss
+    end
   end
 
   get '/style.css' do
