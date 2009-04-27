@@ -114,17 +114,14 @@ class Notable::App < Sinatra::Base
 
     content_type :xml
 
-    body do
-      @notes = Notable::Note.all(:order => [:created_at.desc])
-      haml :rss
-    end
+    @notes = Notable::Note.all(:order => [:created_at.desc])
+    haml :rss
   end
 
   get '/style.css' do
     content_type :css
     last_modified File.mtime(__FILE__)
-    body do
-    <<-eos
+    body = <<-eos
 @import url("http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css");
 html {
   font-size: 62.5%;
@@ -169,6 +166,5 @@ h1 {
   font-size: 3em;
 }
 eos
-  end
   end
 end
