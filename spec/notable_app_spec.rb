@@ -90,7 +90,7 @@ describe 'Notable::App (pristine)' do
     end
 
     it "should have a `Last-Modified' header" do
-      last_response.header.should.has_key('Last-Modified')
+      last_response.headers.should.has_key('Last-Modified')
     end
   end
 end
@@ -311,7 +311,7 @@ describe "With Some Notes" do
     end
 
     it "has a `Last-Modified' header" do
-      last_response.header.should.has_key('Last-Modified')
+      last_response.headers.should.has_key('Last-Modified')
     end
 
     it "is an rss 2.0 feed" do
