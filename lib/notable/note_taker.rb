@@ -4,8 +4,9 @@ require 'rest_client'
 require 'daemons'
 
 class NoteTaker < ::Uppercut::Agent
+  attr_accessor :opts
   def initialize(opts)
-    setup_resource(opts)
+	@opts = opts
     super(opts['jabber_username'], opts['jabber_password'], :connect => false)
   end
 
@@ -38,20 +39,20 @@ class NoteTaker < ::Uppercut::Agent
   end
 
   protected
-  def setup_resource(opts)
+  def setup_resource
     if (opts['http_username']&&opts['http_password'])
-      @@resource = ::RestClient::Resource.new(opts['url'],
+      ::RestClient::Resource.new(opts['url'],
                                    opts['http_username'], opts['http_password'])
     else
-      @@resource = ::RestClient::Resource.new(opts['url'])
+      ::RestClient::Resource.new(opts['url'])
     end
   end
 
-  def self.r
-    @@resource
+  def r
+    @resource ||= setup_resource
   end
 
-  def self.get(url, opts={})
-    ::JSON.parse(r[url].get(opts.merge({:accept => 'application/json'})))
+  def get(url, headers={})
+    ::JSON.parse(r[url].get(headers.merge({:accept => 'application/json'})))
   end
 end
