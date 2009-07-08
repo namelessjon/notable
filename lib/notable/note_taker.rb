@@ -12,13 +12,13 @@ class NoteTaker < ::Uppercut::Agent
 
 
   command(/^last ?(\d+)?$/) do |c, rest|
-    last = rest.to_i unless rest.nil?
+    last = rest.first.to_i unless rest.first.nil?
     notes = get("/last/#{last}")
     c.send(notes.map {|n| n['body'] }.join("\n"))
   end
 
   command(/^search ?(\w+)?$/) do |c, term|
-    if term.nil?
+    if term.first.nil?
       c.send("Send a search term. e.g 'search todo'")
     else
       notes = get("/search?q=#{term}")
