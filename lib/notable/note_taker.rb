@@ -1,18 +1,6 @@
-begin
-  require 'minigems'
-rescue LoadError
-  require 'rubygems'
-end
-
-gem('tyler-uppercut')
 require 'uppercut'
-
-gem('json')
-require 'json/ext'
-
-gem('rest-client')
+require 'json'
 require 'rest_client'
-
 require 'daemons'
 
 class NoteTaker < ::Uppercut::Agent
