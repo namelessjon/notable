@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'haml'
 
 class Notable::App < Sinatra::Base
 
