@@ -1,11 +1,5 @@
 #!/usr/bin/env ruby
-
-begin
-  require 'minigems'
-rescue LoadError
-  require 'rubygems'
-end
-
+require 'rubygems'
 require 'daemons'
 require 'etc'
 require 'yaml'
