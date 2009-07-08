@@ -109,9 +109,9 @@ class Notable::App < Sinatra::Default
   get '/notable.rss' do
     @last_modified = Notable::Note.max(:created_at)
 
+    content_type :xml
     last_modified(@last_modified ? @last_modified : Time.at(0))
 
-    content_type :xml
 
     @notes = Notable::Note.all(:order => [:created_at.desc])
     haml :rss
