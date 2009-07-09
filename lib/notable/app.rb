@@ -5,6 +5,7 @@ class Notable::App < Sinatra::Default
 
   configure do
     DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite3:notes.db')
+    DataMapper.auto_upgrade! if !test? and DataMapper.respond_to?(:auto_upgrade!)
   end
 
   # helpers

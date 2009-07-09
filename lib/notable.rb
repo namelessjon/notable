@@ -9,7 +9,7 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
 module Notable
 end
 
-require 'notable/app'
 require 'notable/note'
+require 'notable/app'
 
 
