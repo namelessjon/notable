@@ -2,6 +2,10 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 
 # make sure we'll connect to a temporary db, not any one that matters
 ENV['DATABASE_URL'] = 'sqlite3::memory:'
+
+# also make sure we're in the test env.  This will make errors so much saner
+ENV['RACK_ENV']     = 'test'
+
 require File.join(File.dirname(__FILE__), '..', 'lib', 'notable')
 
 # require some bits and bobs to help
