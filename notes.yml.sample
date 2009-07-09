@@ -1,3 +1,0 @@
-database: # needs to be a symbol for DM
-  :adapter: sqlite3
-  :database: notes.db
