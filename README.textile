@@ -45,7 +45,7 @@ few more gems:
 * rest_client
 * daemons
 
-==note_taker== takes a variety of options, which can be seen by running
+note_taker takes a variety of options, which can be seen by running
 @note_taker -h@.  However for convinience one of those options, @-C@, reads in
 options from YAML formatted file.  There's an example file included in the repo,
 so:
