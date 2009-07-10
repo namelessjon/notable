@@ -9,6 +9,8 @@ api to talk to notable.
 
 h2. Getting Started
 
+h3. Notable
+
 First, you'll be wanting some rubygems.  Obviously you'll be wanting sinatra (at
 least 0.9.2), but also:
 
@@ -20,13 +22,6 @@ least 0.9.2), but also:
 * do_sqlite3 (Or other DataMapper adapter of your choice)
 * haml
 
-note_taker uses
-
-* uppercut
-* json
-* rest_client
-* daemons
-
 You'll also want a rack-aware webserver (I use thin, but the webrick which comes
 with ruby should suit you fine to test).  Once you have this, getting started
 is easy:
@@ -37,8 +32,31 @@ is easy:
 notable should now be running on port 9292 on the local host.  It should also
 have created an sqlite3 database in the notable directory, called notes.db.  If
 you want to change the data-store notable connects to, change the @DATABASE_URL@
-to any DataMapper understands.
+to any DataMapper understands.  To change aspects of how rackup serves the
+application, check out the options @rackup -h@ gives you.
 
+h3. note_taker
+
+If you also want to be able to talk to note_taker, the jabber bot, you'll need a
+few more gems:
+
+* uppercut
+* json
+* rest_client
+* daemons
+
+==note_taker== takes a variety of options, which can be seen by running
+@note_taker -h@.  However for convinience one of those options, @-C@, reads in
+options from YAML formatted file.  There's an example file included in the repo,
+so:
+
+    cp note_taker.yml.sample note_taker.yml
+    # edit to set a correct JID and password.
+    # JIDs are formatted user@example.com/resource
+    note_taker start -C note_taker.yml
+
+And your jabber bot should start up.  If you change the port notable listens on,
+you'll need to make the corresponding change in the @url:@ (or @-u@ option).
 
 h2. Licensing and Credit
 
