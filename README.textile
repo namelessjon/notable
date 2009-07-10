@@ -1,10 +1,11 @@
 h1. Notable
 
-A very simple sinatra application for taking notes and small snippets.  It
-provides an RSS feed of the notes and has a simple JSON api for creating,
-retrieving and searching notes.  It uses DataMapper to talk to the back end
-datastore.  Also included is 'note_taker', a simple jabber bot which knows how
-to use the JSON api to talk to notable.
+A very simple "sinatra":http://www.sinatrarb.com/" application for taking notes
+and small snippets.  It provides an RSS feed of the notes and has a simple JSON
+api for creating, retrieving and searching notes.  It uses
+"DataMapper":http://www.datamapper.org to talk to the back end datastore.  Also
+included is 'note_taker', a simple jabber bot which knows how to use the JSON
+api to talk to notable.
 
 h2. Getting Started
 
