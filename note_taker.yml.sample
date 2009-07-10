@@ -1,4 +1,3 @@
 jabber_username: notable@example.com/notable
 jabber_password: sample_pass
-url: "http://localhost:4567"
-system_user: notable
+url: "http://localhost:9292"
