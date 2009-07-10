@@ -49,14 +49,16 @@ note_taker takes a variety of options, which can be seen by running
 @note_taker -h@.  However for convinience one of those options, @-C@, reads in
 options from YAML formatted file.  There's an example file included in the repo,
 so:
+
 <code>
 <pre>
-    cp note_taker.yml.sample note_taker.yml
-    # edit to set a correct JID and password.
-    # JIDs are formatted user@example.com/resource
-    note_taker start -C note_taker.yml
+cp note_taker.yml.sample note_taker.yml
+# edit to set a correct JID and password.
+# JIDs are formatted as user@example.com/resource
+note_taker start -C note_taker.yml
 </pre>
 </code>
+
 And your jabber bot should start up.  If you change the port notable listens on,
 you'll need to make the corresponding change in the @url:@ (or @-u@ option).
 
