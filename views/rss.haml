@@ -8,6 +8,6 @@
     - @notes.each do |note|
       %item
         %title&= note.body
-        %description&= note.body
+        %description&= note.html_body
         %pubDate= note.created_at.new_offset.strftime('%a, %d %b %Y %H:%M:%S GMT')
 

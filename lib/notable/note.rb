@@ -23,5 +23,11 @@ module Notable
         created_at.strftime('%d %b')
       end
     end
+
+    def html_body
+      body.gsub(/((http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}((\:[0-9]{1,5})?\/?.*)?)/) do |match|
+        "<a href=\"#{match}\">#{match}</a>"
+      end
+    end
   end
 end

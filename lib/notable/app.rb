@@ -26,7 +26,7 @@ class Notable::App < Sinatra::Default
   end
 
   def format_note(note)
-    "#{note.body} - <em>#{note.created_at.strftime('%H:%M')} #{note.created_at_to_s}</em>"
+    "#{note.html_body} - <em>#{note.created_at.strftime('%H:%M')} #{note.created_at_to_s}</em>"
   end
 
   def choose_format

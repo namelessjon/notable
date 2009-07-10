@@ -130,7 +130,7 @@ describe "Notable::App - Note Creation" do
 
   describe "post '/' with a body" do
     before do
-      post '/', {}, :input => 'A new note!'
+      post '/', {}, :input => 'A new note! http://www.example.com'
     end
 
     it "returns 201 Created" do
@@ -149,6 +149,13 @@ describe "Notable::App - Note Creation" do
       get '/'
       parsed_body.at('//body//li').should.not.be.nil
       parsed_body.at('//body//li').inner_html.should.match(/^A new note!/)
+    end
+
+    it "converts a URL to a link" do
+      get '/'
+      parsed_body.at('//body//li').at('a').should.not.be.nil
+      parsed_body.at('//body//li').at('a')[:href].should.equal 'http://www.example.com'
+      parsed_body.at('//body//li').at('a').inner_html.should.equal 'http://www.example.com'
     end
   end
 
@@ -172,7 +179,9 @@ end
 describe "With Some Notes" do
   before do
     DataMapper.auto_migrate!
-    @notes = %w{bat cat dog dolphin giraffe pony}
+    @link = 'http://example.net'
+    @link_note = "A test #{@link}"
+    @notes =  %w{bat cat dog dolphin giraffe pony} + [@link_note]
     @notes.each_with_index do |n, i|
       Timecop.travel(2009, 3, 25, 10, 10, i) do
         post '/', :note => n
@@ -191,7 +200,7 @@ describe "With Some Notes" do
       end
 
       it "should have all the items in a list" do
-        parsed_body.search('//body//li').size.should.equal 6
+        parsed_body.search('//body//li').size.should.equal 7
       end
     end
 
@@ -207,8 +216,8 @@ describe "With Some Notes" do
       end
 
       it "gets more than 5 when you ask for it" do
-        get '/last/7'
-        parsed_body.search('//body//li').size.should.equal 6
+        get '/last/8'
+        parsed_body.search('//body//li').size.should.equal 7
       end
 
       it "gets five when you give it a silly request" do
@@ -246,7 +255,7 @@ describe "With Some Notes" do
       end
 
       it "returns an array of the items" do
-        parsed_json.size.should.equal 6
+        parsed_json.size.should.equal 7
       end
 
       it "returns an array of hashes" do
@@ -269,8 +278,8 @@ describe "With Some Notes" do
       end
 
       it "gets more than 5 when you ask for it" do
-        get_json '/last/7'
-        parsed_json.size.should.equal 6
+        get_json '/last/8'
+        parsed_json.size.should.equal 7
       end
 
       it "gets five when you give it a silly request" do
@@ -331,7 +340,7 @@ describe "With Some Notes" do
     end
 
     it "has the correct number of items" do
-      parsed_xml.search('/rss/channel/item').size.should.equal 6
+      parsed_xml.search('/rss/channel/item').size.should.equal 7
     end
 
     describe "an item" do
@@ -340,15 +349,15 @@ describe "With Some Notes" do
       end
 
       it "has the correct title" do
-        @item.at('/title[text()="pony"]').should.not.be.nil
+        @item.at('/title').inner_html.should.equal @link_note
       end
 
-      it "has the correct description" do
-        @item.at('/description[text()="pony"]').should.not.be.nil
+      it "has the correct description, with html escaped." do
+        @item.at('/description').inner_html.should.equal %Q|A test &lt;a href=&quot;#{@link}&quot;&gt;#{@link}&lt;/a&gt;|
       end
 
       it "has the correct timestamp" do
-        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:05 GMT")
+        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:06 GMT")
       end
     end
   end
