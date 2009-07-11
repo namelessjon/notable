@@ -181,7 +181,7 @@ describe "With Some Notes" do
     DataMapper.auto_migrate!
     @link = 'http://example.net'
     @link_note = "A test #{@link}"
-    @notes =  %w{bat cat dog dolphin giraffe pony} + [@link_note]
+    @notes =  %w{bat cat dog dolphin giraffe pony 11 22 33 44 55 66 77 88 99 1010 1111 1212 1313 1414} + [@link_note]
     @notes.each_with_index do |n, i|
       Timecop.travel(2009, 3, 25, 10, 10, i) do
         post '/', :note => n
@@ -199,8 +199,8 @@ describe "With Some Notes" do
         last_response.should.be.ok
       end
 
-      it "should have all the items in a list" do
-        parsed_body.search('//body//li').size.should.equal 7
+      it "should have at most 20 items in a list" do
+        parsed_body.search('//body//li').size.should.equal 20
       end
     end
 
@@ -216,7 +216,7 @@ describe "With Some Notes" do
       end
 
       it "gets more than 5 when you ask for it" do
-        get '/last/8'
+        get '/last/7'
         parsed_body.search('//body//li').size.should.equal 7
       end
 
@@ -254,8 +254,8 @@ describe "With Some Notes" do
         @item = parsed_json.first
       end
 
-      it "returns an array of the items" do
-        parsed_json.size.should.equal 7
+      it "returns an array of the items, at most 20 items in size" do
+        parsed_json.size.should.equal 20
       end
 
       it "returns an array of hashes" do
@@ -278,7 +278,7 @@ describe "With Some Notes" do
       end
 
       it "gets more than 5 when you ask for it" do
-        get_json '/last/8'
+        get_json '/last/7'
         parsed_json.size.should.equal 7
       end
 
@@ -339,8 +339,8 @@ describe "With Some Notes" do
       parsed_xml.at('/rss/channel/link[text()="http://example.org:80/"]').should.not.be.nil
     end
 
-    it "has the correct number of items" do
-      parsed_xml.search('/rss/channel/item').size.should.equal 7
+    it "returns at most 20 items" do
+      parsed_xml.search('/rss/channel/item').size.should.equal 20
     end
 
     describe "an item" do
@@ -357,7 +357,7 @@ describe "With Some Notes" do
       end
 
       it "has the correct timestamp" do
-        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:06 GMT")
+        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:20 GMT")
       end
     end
   end

@@ -58,7 +58,7 @@ class Notable::App < Sinatra::Default
 
 
   get '/' do
-    @notes = Notable::Note.all(:order => [:created_at.desc])
+    @notes = Notable::Note.all(:order => [:created_at.desc], :limit => 20)
     choose_format
   end
 
@@ -114,7 +114,7 @@ class Notable::App < Sinatra::Default
     last_modified(@last_modified ? @last_modified : Time.at(0))
 
 
-    @notes = Notable::Note.all(:order => [:created_at.desc])
+    @notes = Notable::Note.all(:order => [:created_at.desc], :limit => 20)
     haml :rss
   end
 
