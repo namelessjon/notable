@@ -12,8 +12,8 @@ class NoteTaker < ::Uppercut::Agent
 
 
   command(/^last ?(\d+)?$/) do |c, rest|
-    last = rest.first.to_i unless rest.first.nil?
-    notes = get("/last/#{last}")
+    num = (rest.first.nil?) ? 5 : rest.first.to_i
+    notes = get("/notes?num=#{num}")
     c.send(notes.map {|n| n['body'] }.join("\n"))
   end
 

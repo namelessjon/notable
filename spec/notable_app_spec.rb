@@ -204,25 +204,25 @@ describe "With Some Notes" do
       end
     end
 
-    describe "get '/last(/:n)'" do
-      it "gets 5 by default" do
-        get '/last'
-        parsed_body.search('//body//li').size.should.equal 5
+    describe "get '/notes'" do
+      it "gets 20 by default" do
+        get '/notes'
+        parsed_body.search('//body//li').size.should.equal 20
       end
 
       it "gets 1 when you ask for it" do
-        get '/last/1'
+        get '/notes?num=1'
         parsed_body.search('//body//li').size.should.equal 1
       end
 
-      it "gets more than 5 when you ask for it" do
-        get '/last/7'
-        parsed_body.search('//body//li').size.should.equal 7
+      it "gets more than 20 when you ask for it" do
+        get '/notes?num=21'
+        parsed_body.search('//body//li').size.should.equal 21
       end
 
-      it "gets five when you give it a silly request" do
-        get '/last/foo'
-        parsed_body.search('//body//li').size.should.equal 5
+      it "gets 20 when you give it a silly request" do
+        get '/notes?num=foo'
+        parsed_body.search('//body//li').size.should.equal 20
       end
     end
 
@@ -266,25 +266,25 @@ describe "With Some Notes" do
       end
     end
 
-    describe "get '/last'" do
-      it "gets 5 by default" do
-        get_json '/last'
-        parsed_json.size.should.equal 5
+    describe "get '/notes'" do
+      it "gets 20 by default" do
+        get_json '/notes'
+        parsed_json.size.should.equal 20
       end
 
       it "gets 1 when you ask for it" do
-        get_json '/last/1'
+        get_json '/notes?num=1'
         parsed_json.size.should.equal 1
       end
 
-      it "gets more than 5 when you ask for it" do
-        get_json '/last/7'
-        parsed_json.size.should.equal 7
+      it "gets more than 20 when you ask for it" do
+        get_json '/notes?num=21'
+        parsed_json.size.should.equal 21
       end
 
-      it "gets five when you give it a silly request" do
-        get_json '/last/foo'
-        parsed_json.size.should.equal 5
+      it "gets twenty when you give it a silly request" do
+        get_json '/notes?num=foo'
+        parsed_json.size.should.equal 20
       end
     end
 

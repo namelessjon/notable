@@ -62,17 +62,16 @@ class Notable::App < Sinatra::Default
     choose_format
   end
 
-  ['/last/:count', '/last/', '/last'].each do |url|
-    get url do
-      count = params['count'].to_i
-      if (count < 1)
-        count = 5
-      end
-      @notes = Notable::Note.all(:order => [:created_at.desc],
-                                 :limit => count)
-      @title = "Last #{count} Notes"
-      choose_format
+  get '/notes' do
+    count = params['num'].to_i
+    if (count < 1)
+      count = 20
     end
+
+    @notes = Notable::Note.all(:order => [:created_at.desc],
+                               :limit => count)
+    @title = "Last #{count} Notes"
+    choose_format
   end
 
   get '/search' do
