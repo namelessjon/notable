@@ -58,6 +58,8 @@ class Notable::App < Sinatra::Default
 
 
   get '/' do
+    last_modified(Notable::Note.max(:created_at))
+
     @notes = Notable::Note.all(:order => [:created_at.desc], :limit => 20)
     choose_format
   end
@@ -94,6 +96,7 @@ class Notable::App < Sinatra::Default
   end
 
   get '/notes.txt' do
+    last_modified(Notable::Note.max(:created_at))
     @notes = sort_notes(Notable::Note.all(:order => [:created_at.desc]))
     out = []
     @notes.each do |day|
