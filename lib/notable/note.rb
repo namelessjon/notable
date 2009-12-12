@@ -3,7 +3,7 @@ module Notable
     include DataMapper::Resource
 
     property :id, Serial
-    property :body, String, :length => 255, :nullable => false
+    property :body, String, :length => 255, :required => true
     property :created_at, DateTime
     property :updated_at, DateTime
 
