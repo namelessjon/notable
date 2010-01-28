@@ -1,7 +1,7 @@
 require 'sinatra/base'
 require 'haml'
 
-class Notable::App < Sinatra::Default
+class Notable::App < Sinatra::Base
 
   configure do
     DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite3:notes.db')
