@@ -9,20 +9,23 @@ class Notable::App < Sinatra::Base
   end
 
   # helpers
-  def link_to(page = '/')
-    "#{request.env['SCRIPT_NAME']}#{page}"
+  def link_to(url = '/')
+    "#{request.script_name}#{url}"
   end
 
   def hostname
-    if request.env['HTTP_X_FORWARDED_PROTO'] == 'https'
-      "https://#{request.env['SERVER_NAME']}"
-    else
-      "http://#{request.env['SERVER_NAME']}:#{request.env['SERVER_PORT']}"
+    url = request.scheme + "://"
+    url << request.host
+
+    if request.scheme == "https" && request.port != 443 ||
+      request.scheme == "http" && request.port != 80
+      url << ":#{request.port}"
     end
+    url
   end
 
-  def absolute_url(page = '/')
-    "#{hostname}#{link_to(page)}"
+  def absolute_url(url = '/')
+    "#{hostname}#{link_to(url)}"
   end
 
   def format_note(note)
