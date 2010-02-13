@@ -61,7 +61,7 @@ class Notable::App < Sinatra::Base
 
 
   get '/' do
-    last_modified(Notable::Note.max(:created_at))
+    last_modified(Notable::Note.max(:created_at) || Time.at(0))
 
     @notes = Notable::Note.all(:order => [:created_at.desc], :limit => 20)
     choose_format
