@@ -336,7 +336,7 @@ describe "With Some Notes" do
     end
 
     it "has the correct link" do
-      parsed_xml.at('/rss/channel/link[text()="http://example.org:80/"]').should.not.be.nil
+      parsed_xml.at('/rss/channel/link[text()="http://example.org/"]').should.not.be.nil
     end
 
     it "returns at most 20 items" do
