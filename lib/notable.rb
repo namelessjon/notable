@@ -4,7 +4,7 @@ require 'dm-serializer'
 require 'dm-validations'
 require 'dm-aggregates'
 
-$LOAD_PATH.unshift "#{File.dirname(__FILE__)}"
+$LOAD_PATH.unshift "#{::File.dirname(__FILE__)}"
 
 module Notable
 end

@@ -2,6 +2,6 @@
 
 require 'lib/notable'
 
-Notable::App.set :root, File.dirname(__FILE__)
+Notable::App.set :root, ::File.dirname(__FILE__)
 
 run Notable::App
