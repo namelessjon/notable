@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'haml'
+require 'yajl'
 
 class Notable::App < Sinatra::Base
 
@@ -35,8 +36,8 @@ class Notable::App < Sinatra::Base
   def choose_format
     case request.env['HTTP_ACCEPT']
     when 'application/json'
-      content_type 'application/json'
-      body(@notes.to_json)
+      content_type :json
+      body Yajl::Encoder.encode(@notes.map { |n| n.attributes })
     else
       body(haml(:index))
     end

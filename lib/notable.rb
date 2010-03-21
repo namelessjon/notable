@@ -1,6 +1,5 @@
 require 'dm-core'
 require 'dm-timestamps'
-require 'dm-serializer'
 require 'dm-validations'
 require 'dm-aggregates'
 
