@@ -4,8 +4,7 @@ module Notable
 
     property :id, Serial
     property :body, String, :length => 255, :required => true
-    property :created_at, DateTime
-    property :updated_at, DateTime
+    timestamps :at
 
     def to_s
       created_at_to_s + ": " + body
