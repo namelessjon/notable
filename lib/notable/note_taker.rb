@@ -1,5 +1,5 @@
 require 'uppercut'
-require 'json'
+require 'yajl'
 require 'rest_client'
 require 'daemons'
 
@@ -53,6 +53,6 @@ class NoteTaker < ::Uppercut::Agent
   end
 
   def get(url, headers={})
-    ::JSON.parse(r[url].get(headers.merge({:accept => 'application/json'})))
+    ::Yajl::Parser.parse(r[url].get(headers.merge({:accept => 'application/json'})))
   end
 end
