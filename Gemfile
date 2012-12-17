@@ -4,7 +4,6 @@ gem 'sinatra', '~> 1.2'
 
 gem 'dm-core', '~> 1.0'
 gem 'dm-timestamps', '~> 1.0'
-gem 'dm-serializer', '~> 1.0'
 gem 'dm-validations', '~> 1.0'
 gem 'dm-aggregates', '~> 1.0'
 gem 'dm-migrations', '~> 1.0'

@@ -11,7 +11,6 @@ least 1.2), but also:
 
 * dm-core
 * dm-timestamps
-* dm-serializer
 * dm-validations
 * dm-aggregates
 * dm-sqlite-adapter (Or other DataMapper adapter of your choice)
