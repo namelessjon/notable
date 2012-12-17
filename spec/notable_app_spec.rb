@@ -10,7 +10,7 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'notable')
 
 # require some bits and bobs to help
 require 'rack/test'
-require 'hpricot'
+require 'nokogiri'
 require 'json'
 require 'timecop'
 require 'dm-migrations'
@@ -24,11 +24,11 @@ class Bacon::Context
   end
 
   def parsed_body
-    Hpricot(last_response.body.to_s)
+    Nokogiri.parse(last_response.body.to_s)
   end
 
   def parsed_xml
-    Hpricot::XML(last_response.body.to_s)
+    Nokogiri::XML.parse(last_response.body.to_s)
   end
 
   def parsed_json
@@ -240,12 +240,12 @@ describe "With Some Notes" do
       end
 
       it "returns notes which match" do
-        parsed_body.at('//li[text()^="giraffe"]').should.not.be.nil
-        parsed_body.at('//li[text()^="dog"]').should.not.be.nil
+        parsed_body.at('//li[contains(text(),"giraffe")]').should.not.be.nil
+        parsed_body.at('//li[contains(text(),"dog")]').should.not.be.nil
       end
       it "doesn't return notes which don't match" do
         (@notes - %w{giraffe dog}).each do |n|
-          parsed_body.at("//li[text()^='#{n}']").should.be.nil
+          parsed_body.at("//li[contains(text(),'#{n}')]").should.be.nil
         end
       end
     end
@@ -353,15 +353,15 @@ describe "With Some Notes" do
       end
 
       it "has the correct title" do
-        @item.at('/title').inner_html.should.equal @link_note
+        @item.at('title').inner_html.should.equal @link_note
       end
 
       it "has the correct description, with html escaped." do
-        @item.at('/description').inner_html.should.equal %Q|A test &lt;a href=&quot;#{@link}&quot;&gt;#{@link}&lt;/a&gt;|
+        @item.at('description').inner_html.should.equal %Q|A test &lt;a href="#{@link}"&gt;#{@link}&lt;/a&gt;|
       end
 
       it "has the correct timestamp" do
-        @item.at('/pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:20 GMT")
+        @item.at('pubDate').inner_html.should.equal("Wed, 25 Mar 2009 10:10:20 GMT")
       end
     end
   end
