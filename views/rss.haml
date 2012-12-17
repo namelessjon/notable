@@ -2,9 +2,9 @@
 %rss{:version => '2.0'}
   %channel
     %title Notable
-    %link= absolute_url
+    %link= uri('/')
     %description Things that have been noted
-    %image{'title' => 'notable', 'url' => link_to('/feed_edit.png'), 'link' => absolute_url }/
+    %image{'title' => 'notable', 'url' => uri('/feed_edit.png'), 'link' => uri('/')}/
     - @notes.each do |note|
       %item
         %title&= note.body

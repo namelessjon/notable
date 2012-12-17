@@ -11,25 +11,6 @@ class Notable::App < Sinatra::Base
   end
 
   # helpers
-  def link_to(url = '/')
-    "#{request.script_name}#{url}"
-  end
-
-  def hostname
-    url = request.scheme + "://"
-    url << request.host
-
-    if request.scheme == "https" && request.port != 443 ||
-      request.scheme == "http" && request.port != 80
-      url << ":#{request.port}"
-    end
-    url
-  end
-
-  def absolute_url(url = '/')
-    "#{hostname}#{link_to(url)}"
-  end
-
   def format_note(note)
     "#{note.html_body} - <em>#{note.created_at.strftime('%H:%M')} #{note.created_at_to_s}</em>"
   end
@@ -93,7 +74,7 @@ class Notable::App < Sinatra::Base
     @note = Notable::Note.new(:body => note_body)
     if @note.save
       status 201
-      response['Location'] = link_to
+      response['Location'] = uri
       body "Note created!\n"
     else
       throw :halt, [400, @note.errors.full_messages.join("\n") + "\n"]
