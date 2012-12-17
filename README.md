@@ -6,15 +6,20 @@ A very simple [sinatra](http://www.sinatrarb.com/) application for taking notes 
 
 ### Notable
 
-First, you'll be wanting some rubygems.  Obviously you'll be wanting sinatra (at least 0.9.2), but also:
+First, you'll be wanting some rubygems.  Obviously you'll be wanting sinatra (at
+least 1.2), but also:
 
 * dm-core
 * dm-timestamps
 * dm-serializer
 * dm-validations
 * dm-aggregates
-* do_sqlite3 (Or other DataMapper adapter of your choice)
+* dm-sqlite-adapter (Or other DataMapper adapter of your choice)
+* dm-migrations
 * haml
+
+There is a Gemfile for use with bundler which can be used to install all of
+these.
 
 You'll also want a rack-aware webserver (I use [unicorn](http://unicorn.bogomips.org/), but the webrick which comes with ruby should suit you fine to test).  Once you have this, getting started is easy:
 
@@ -28,8 +33,7 @@ notable should now be running on port 9292 on the local host.  It should also ha
 If you also want to be able to talk to note_taker, the jabber bot, you'll need a few more gems:
 
 * uppercut
-* json
-* rest_client
+* rest-client
 * daemons
 
 note_taker takes a variety of options, which can be seen by running `note_taker -h`.  However for convenience one of those options, `-C`, reads in options from YAML formatted file.  There's an example file included in the repo, so:
@@ -52,7 +56,7 @@ The icons used in notable are from the [silk](http://www.famfamfam.com/lab/icons
 
 The code for notable is released under the MIT license.
 
-Copyright (c) 2008-2009 Jonathan Stott
+Copyright (c) 2008-2012 Jonathan Stott
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
