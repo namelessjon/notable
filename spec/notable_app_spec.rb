@@ -13,6 +13,7 @@ require 'rack/test'
 require 'hpricot'
 require 'json'
 require 'timecop'
+require 'dm-migrations'
 
 # setup everything for bacon!
 class Bacon::Context
@@ -41,6 +42,9 @@ class Bacon::Context
 end
 
 DataMapper.auto_migrate!
+Notable::App.root = File.join(File.dirname(__FILE__), '..')
+
+
 
 describe 'Notable::App (pristine)' do
   describe "get '/'" do
@@ -72,7 +76,7 @@ describe 'Notable::App (pristine)' do
       end
 
       it "returns the correct mime-type" do
-        last_response.content_type.should.equal 'application/json'
+        last_response.content_type.should.include 'application/json'
       end
 
       it "returns an empty array" do
@@ -90,7 +94,7 @@ describe 'Notable::App (pristine)' do
     end
 
     it "should have `text/css' content type" do
-      last_response.content_type.should.equal 'text/css'
+      last_response.content_type.should.include 'text/css'
     end
 
     it "should have a `Last-Modified' header" do
@@ -117,8 +121,8 @@ describe "Notable::App - Note Creation" do
       last_response.body.should.include("Note created!\n")
     end
 
-    it "returns '/' in the location header" do
-      last_response['Location'].should.equal '/'
+    it "returns the correct location header" do
+      last_response['Location'].should.equal 'http://example.org/'
     end
 
     it "actually creates a note" do
@@ -141,8 +145,8 @@ describe "Notable::App - Note Creation" do
       last_response.body.should.include("Note created!\n")
     end
 
-    it "returns '/' in the location header" do
-      last_response['Location'].should.equal '/'
+    it "returns the correct location header" do
+      last_response['Location'].should.equal 'http://example.org/'
     end
 
     it "actually creates a note" do
@@ -320,7 +324,7 @@ describe "With Some Notes" do
     end
 
     it "has the `application/xml' mime-type" do
-      last_response.content_type.should.equal 'application/xml'
+      last_response.content_type.should.include 'application/xml'
     end
 
     it "has a `Last-Modified' header" do
